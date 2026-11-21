@@ -23,12 +23,12 @@ print("Wersje: Python", sys.version.split()[0], "| pandas", pd.__version__,
       "| numpy", np.__version__, "| scipy", scipy.__version__,
       "| statsmodels", statsmodels.__version__, "| matplotlib", matplotlib.__version__)
 
-# ---- Wygląd wykresów (wspólny dla wszystkich) -------------------------------
+# Wygląd wykresów (wspólny dla wszystkich)
 plt.rcParams.update({"font.size": 10, "axes.spines.top": False,
                      "axes.spines.right": False, "axes.axisbelow": True,
                      "axes.titlesize": 11, "axes.titleweight": "bold"})
 
-# ---- 0. PRZYGOTOWANIE -------------------------------------------------------
+# 0. PRZYGOTOWANIE
 d = S.load_clean()
 OUT = S.WYNIKI
 LAB = S.CONTACT_LAB
@@ -77,7 +77,7 @@ def bar_ci(ax, tab, labels, capsize=5):
                   color=[COL[k] for k in tab.index], error_kw={"elinewidth": 1.2})
 
 
-# ---- 1. KONTROLA DANYCH -----------------------------------------------------
+# 1. KONTROLA DANYCH
 print("\n### 1. Kontrola danych")
 raw = S.load_raw()
 for c in raw.columns:                                   # unikalne wartości
@@ -94,7 +94,7 @@ else:
     print("Brak kolumny z identyfikatorem: identyczne wiersze to mogą być różne osoby o tych samych cechach, więc ich nie usuwamy.")
 print("Liczność w grupach CONTACT:\n", d["kanal"].value_counts().reindex(ORDER))
 
-# ---- 2. CECHY CIĄGŁE (AGE): statystyki opisowe ------------------------------
+# 2. CECHY CIĄGŁE (AGE): statystyki opisowe
 print("\n### 2. Cecha ciągła AGE")
 
 
@@ -135,7 +135,7 @@ ax[1].set(title="Wiek według kanału komunikacji", ylabel="Wiek (lata)",
 ax[1].yaxis.grid(True, alpha=.3)
 save("w1_age_hist_box.png")
 
-# ---- 3. CECHY SKOKOWE -------------------------------------------------------
+# 3. CECHY SKOKOWE 
 print("\n### 3. Cechy skokowe")
 cechy = {c: d[c].astype(object).fillna("brak (.)")
          for c in ["contact", "house_loan", "education", "poutcome"]}
@@ -170,7 +170,7 @@ for c in ["house_loan", "education", "poutcome"]:        # tabele krzyżowe z CO
     print(f"\n{c} x CONTACT (% w kanale), chi2={chi[0]:.2f}, p={chi[1]:.3f}\n{pct}")
     pd.concat({"n": ct, "% w kanale": pct}, axis=1).to_csv(OUT / f"t3_krzyzowa_{c}.csv")
 
-# ---- 4. WYNIK BADANIA: % Y=1 według CONTACT (obserwowane Y) -----------------
+# 4. WYNIK BADANIA: % Y=1 według CONTACT (obserwowane Y)
 print("\n### 4. Wynik badania")
 t_y = prop_table(obs, "y", "n_obs", "Y=1")
 print(t_y.round(4))
@@ -221,7 +221,7 @@ print("\nPodgrupy house_loan:\n", t_hl.round(3).to_string(index=False))
 print("\nPodgrupy poutcome:\n", t_po.round(3).to_string(index=False))
 pd.concat([t_hl, t_po]).to_csv(OUT / "t5_y_podgrupy.csv", index=False)
 
-# ---- 5. BRAKI DANYCH --------------------------------------------------------
+# 5. BRAKI DANYCH
 print("\n### 5. Braki danych")
 cols = ["y", "contact", "house_loan", "age", "education", "poutcome"]
 t_braki = pd.DataFrame({"braki": d[cols].isna().sum()})
@@ -258,7 +258,7 @@ ax.text(0, -.21, f"Linia przerywana: średni odsetek braków w całej próbie ({
         transform=ax.transAxes, fontsize=8, color="0.3", va="top")
 save("w5_braki_wg_contact.png")
 
-# ---- 6. RÓWNOWAGA LOSOWANIA: SMD między grupami CONTACT ---------------------
+# 6. RÓWNOWAGA LOSOWANIA: SMD między grupami CONTACT
 print("\n### 6. SMD (próg 0,1)")
 # Cechy skokowe -> zmienne 0/1, bez poziomów referencyjnych
 dummies = pd.get_dummies(d[["house_loan", "poutcome", "education"]], dtype=float)
