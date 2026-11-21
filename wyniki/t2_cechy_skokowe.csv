@@ -1,0 +1,17 @@
+zmienna,kategoria,n,%
+contact,1,7277,64.38
+contact,0,3294,29.14
+contact,2,733,6.48
+house_loan,yes,6305,55.78
+house_loan,no,4999,44.22
+education,secondary,5789,51.21
+education,tertiary,3311,29.29
+education,primary,1712,15.15
+education,unknown,492,4.35
+poutcome,unknown,9214,81.51
+poutcome,failure,1238,10.95
+poutcome,other,476,4.21
+poutcome,success,376,3.33
+y,0,7427,65.7
+y,brak (.),2879,25.47
+y,1,998,8.83
