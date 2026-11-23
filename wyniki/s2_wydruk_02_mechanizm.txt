@@ -1,0 +1,220 @@
+Wersje: Python 3.13.5 | pandas 2.2.3 | numpy 2.1.3 | scipy 1.15.3 | statsmodels 0.14.4 | matplotlib 3.10.0
+n = 11304, braki Y: 2879 (25.47%)
+
+### 1. Odsetek braków Y w kategoriach cech skokowych (test chi-kwadrat)
+     cecha kategoria    n  braki Y  odsetek braków  dolna 95%  górna 95%
+   contact         2  733      187          0.2551     0.2249     0.2879
+   contact         0 3294      868          0.2635     0.2487     0.2788
+   contact         1 7277     1824          0.2507     0.2408     0.2607
+house_loan       yes 6305     1586          0.2515     0.2410     0.2624
+house_loan        no 4999     1293          0.2587     0.2467     0.2710
+ education secondary 5789     1448          0.2501     0.2391     0.2614
+ education   primary 1712      444          0.2593     0.2391     0.2806
+ education  tertiary 3311      842          0.2543     0.2398     0.2694
+ education   unknown  492      145          0.2947     0.2561     0.3365
+  poutcome   unknown 9214     2381          0.2584     0.2496     0.2674
+  poutcome   failure 1238      298          0.2407     0.2177     0.2653
+  poutcome   success  376       98          0.2606     0.2188     0.3073
+  poutcome     other  476      102          0.2143     0.1798     0.2534
+     age_q     18-32 2790      684          0.2452     0.2296     0.2615
+     age_q     33-36 1884      487          0.2585     0.2392     0.2787
+     age_q     37-43 2358      629          0.2668     0.2493     0.2850
+     age_q     44-51 2150      544          0.2530     0.2351     0.2718
+     age_q     52-95 2122      535          0.2521     0.2341     0.2710
+
+Testy niezależności r od cechy:
+               chi2  df       p  V Cramera
+cecha                                    
+contact     1.9753   2  0.3724     0.0132
+house_loan  0.7046   1  0.4012     0.0079
+education   4.9847   3  0.1729     0.0210
+poutcome    6.1104   3  0.1064     0.0232
+age_q       3.3905   4  0.4947     0.0173
+
+### 1b. AGE według r
+            statystyka  wartość
+ średnia Y obserwowane  41.0256
+        średnia brak Y  40.9361
+      różnica średnich   0.0895
+                   SMD   0.0085
+              t Welcha   0.3960
+          p (t Welcha)   0.6921
+      p (Mann-Whitney)   0.9219
+D Kołmogorowa-Smirnowa   0.0124
+               p (K-S)   0.8918
+
+### 2. Model logistyczny braku Y
+                        Coef.  Std.Err.       z   P>|z|  [0.025  0.975]
+Intercept             -1.0216    0.1324 -7.7166  0.0000 -1.2811 -0.7621
+contact[T.0]           0.0304    0.0966  0.3148  0.7529 -0.1590  0.2198
+contact[T.1]          -0.0193    0.0906 -0.2133  0.8311 -0.1969  0.1583
+house_loan[T.no]       0.0390    0.0464  0.8411  0.4003 -0.0519  0.1299
+poutcome[T.failure]   -0.0692    0.0737 -0.9387  0.3479 -0.2136  0.0753
+poutcome[T.success]    0.0200    0.1214  0.1650  0.8689 -0.2179  0.2579
+poutcome[T.other]     -0.2236    0.1159 -1.9288  0.0538 -0.4508  0.0036
+education[T.primary]   0.0501    0.0643  0.7791  0.4359 -0.0760  0.1762
+education[T.tertiary]  0.0238    0.0508  0.4694  0.6388 -0.0757  0.1233
+education[T.unknown]   0.2195    0.1043  2.1049  0.0353  0.0151  0.4239
+age                   -0.0018    0.0021 -0.8530  0.3936 -0.0060  0.0024
+
+Ilorazy szans braku Y:
+                          beta      SE      OR  OR dolna 95%  OR górna 95%  p (Wald)
+contact[T.0]           0.0304  0.0966  1.0309        0.8530        1.2459    0.7529
+contact[T.1]          -0.0193  0.0906  0.9809        0.8213        1.1715    0.8311
+house_loan[T.no]       0.0390  0.0464  1.0398        0.9494        1.1387    0.4003
+poutcome[T.failure]   -0.0692  0.0737  0.9332        0.8077        1.0782    0.3479
+poutcome[T.success]    0.0200  0.1214  1.0202        0.8042        1.2942    0.8689
+poutcome[T.other]     -0.2236  0.1159  0.7997        0.6371        1.0036    0.0538
+education[T.primary]   0.0501  0.0643  1.0514        0.9268        1.1927    0.4359
+education[T.tertiary]  0.0238  0.0508  1.0241        0.9271        1.1312    0.6388
+education[T.unknown]   0.2195  0.1043  1.2455        1.0152        1.5279    0.0353
+age                   -0.0018  0.0021  0.9982        0.9940        1.0024    0.3936
+
+Testy LR dla całych cech (Type 3), model braku:
+             LR chi2  df       p
+cecha                          
+contact      0.9019   2  0.6370
+age          0.7286   1  0.3933
+house_loan   0.7072   1  0.4004
+poutcome     4.4831   3  0.2138
+education    4.5374   3  0.2090
+Łączny test LR wszystkich cech: chi2 = 12.78, df = 10, p = 0.2364
+AUC modelu braku = 0.5167 (95% bootstrap: 0.5050-0.5289)
+Pseudo-R2 McFaddena = 0.00100
+
+### 2a. Interakcje CONTACT x cecha w modelu braku
+                      LR chi2  df       p
+interakcja                               
+wszystkie łącznie     24.7266  13  0.0251
+contact x age         15.9841   2  0.0003
+contact x house_loan   3.4687   2  0.1765
+contact x poutcome     5.0195   3  0.1704
+contact x education    4.2059   6  0.6488
+Uwaga: interakcja c0 x poutcome pominięta (zbyt mało obserwacji, patrz komentarz wyżej).
+
+Efekt wieku na szansę braku Y w kanałach:
+           n  OR braku na 10 lat  dolna 95%  górna 95%       p
+kanał                                                        
+0      3294              1.0963     1.0107     1.1892  0.0267
+A      7277              0.9885     0.9393     1.0402  0.6557
+B       733              0.8155     0.7214     0.9219  0.0011
+
+### 2b. Nieliniowość AGE w modelu braku
+                        logL       AIC
+model                                 
+AGE liniowo         -6407.81  12837.63
+AGE: B-splajn, df=4 -6406.03  12840.07
+AGE w kwintylach    -6406.32  12840.64
+LR splajn wobec liniowego: chi2 = 3.56, df = 3, p = 0.3125
+
+### 2c. Test MCAR Little'a
+Little: d2 = 12.74, df = 10, p = 0.2385
+Test zakłada wielowymiarowy rozkład normalny (tu: zmienne 0/1), więc jest tylko uzupełnieniem.
+
+Model braku + CONTACT x AGE: LR = 15.98, df = 2, p = 0.0003; AIC 12837.6 -> 12825.6; AUC = 0.5263 (95%: 0.5132-0.5375)
+P(r = 0 | X) zapisane do s2_p_obserwacji.csv. Zakres p_obs_int: 0.5781-0.8873
+
+### 3. Model logistyczny Y na obserwowanych Y (wszystkie cechy)
+Ilorazy szans Y = 1:
+                          beta      SE       OR  OR dolna 95%  OR górna 95%  p (Wald)
+contact[T.0]          -0.6898  0.1719   0.5017        0.3582        0.7027    0.0001
+contact[T.1]           0.1487  0.1428   1.1603        0.8770        1.5352    0.2978
+house_loan[T.no]       0.6373  0.0766   1.8914        1.6276        2.1980    0.0000
+poutcome[T.failure]    0.3389  0.1086   1.4034        1.1344        1.7361    0.0018
+poutcome[T.success]    2.5928  0.1357  13.3669       10.2443       17.4414    0.0000
+poutcome[T.other]      0.5656  0.1490   1.7605        1.3146        2.3578    0.0001
+education[T.primary]  -0.3375  0.1247   0.7136        0.5588        0.9112    0.0068
+education[T.tertiary]  0.1045  0.0798   1.1102        0.9493        1.2982    0.1906
+education[T.unknown]   0.1572  0.1751   1.1702        0.8302        1.6494    0.3694
+age                   -0.0027  0.0034   0.9973        0.9907        1.0039    0.4225
+
+Testy LR dla całych cech (Type 3), model Y:
+              LR chi2  df       p
+cecha                           
+contact      63.3742   2  0.0000
+age           0.6449   1  0.4219
+house_loan   70.3810   1  0.0000
+poutcome    378.7489   3  0.0000
+education    13.0145   3  0.0046
+AUC modelu Y = 0.7116 (95% bootstrap: 0.6937-0.7302)
+
+EDUCATION ponad model docelowy: LR chi2 = 13.01, df = 3, p = 0.0046; AUC 0.7107 -> 0.7116
+beta1 - beta2 (A wobec B): model docelowy 0.1771 (OR 1.194), z EDUCATION 0.1487 (OR 1.160)
+
+### 3b. Nieliniowość AGE w modelu Y
+LR splajn wobec liniowego: chi2 = 117.62, df = 3, p = 0.0000; AIC 5463.3 -> 5351.7
+
+### 3c. Interakcje CONTACT x cecha w modelu Y
+AGE liniowo:
+                       LR chi2  df       p
+interakcja                               
+wszystkie łącznie     27.1073  13  0.0120
+contact x age         10.4806   2  0.0053
+contact x house_loan  15.7868   2  0.0004
+contact x poutcome     1.3069   3  0.7275
+contact x education    4.4478   6  0.6163
+AGE jako B-splajn (te testy idą do tabeli decyzyjnej):
+                       LR chi2  df       p
+interakcja                               
+wszystkie łącznie     20.5203  13  0.0830
+contact x age          5.0539   2  0.0799
+contact x house_loan   8.5708   2  0.0138
+contact x poutcome     4.8583   3  0.1825
+contact x education    2.8568   6  0.8266
+
+Efekt wieku na szansę zakupu (obserwowane Y) w kanałach:
+           n  OR zakupu na 10 lat  dolna 95%  górna 95%       p
+kanał                                                         
+0      2426               0.7717     0.6251     0.9528  0.0160
+A      5453               0.9958     0.9269     1.0699  0.9093
+B       546               1.3371     1.1345     1.5759  0.0005
+
+### 4a. Porównanie kandydatów na model imputacyjny Y (obserwowane Y)
+                                          liczba parametrów      logL       AIC       BIC    AUC  delta AIC
+model                                                                                                      
+K1: efekty główne, AGE liniowo                           11 -2720.655  5463.310  5540.738  0.712    116.512
+K2: efekty główne, AGE splajn                            14 -2661.843  5351.686  5450.231  0.736      4.888
+K3: K2 + CONTACT x AGE                                   16 -2659.316  5350.632  5463.255  0.736      3.834
+K4: K2 + CONTACT x HOUSING_LOAN                          16 -2657.558  5347.115  5459.738  0.737      0.317
+K5: K2 + CONTACT x (AGE, HOUSING_LOAN)                   18 -2655.399  5346.798  5473.499  0.737      0.000
+K6: K2 + CONTACT x splajn AGE                            22 -2656.166  5356.333  5511.190  0.737      9.534
+K7: K5 + CONTACT x (POUTCOME, EDUCATION)                 27 -2651.583  5357.166  5547.218  0.738     10.368
+Najniższe AIC: K5: K2 + CONTACT x (AGE, HOUSING_LOAN) | najniższe BIC: K2: efekty główne, AGE splajn
+LR K5 wobec K2: chi2 = 12.89, df = 4, p = 0.0118
+
+### 4b. Tabela decyzyjna
+                   element w modelu docelowym  LR (r)  df (r)  p (r)   LR (Y)  df (Y)  p (Y) związek z r związek z Y    rola wg reguły                                  decyzja
+                   CONTACT                tak  0.9019       2 0.6370  63.3742       2 0.0000         nie         tak poprawia precyzję        włączyć (cecha modelu docelowego)
+             AGE (liniowo)                tak  0.7286       1 0.3933   0.6449       1 0.4219         nie         nie        bez wpływu        włączyć (cecha modelu docelowego)
+AGE (nieliniowo, B-splajn)                nie  3.5641       3 0.3125 117.6237       3 0.0000         nie         tak poprawia precyzję                                  włączyć
+              HOUSING_LOAN                tak  0.7072       1 0.4004  70.3810       1 0.0000         nie         tak poprawia precyzję        włączyć (cecha modelu docelowego)
+                  POUTCOME                tak  4.4831       3 0.2138 378.7489       3 0.0000         nie         tak poprawia precyzję        włączyć (cecha modelu docelowego)
+                 EDUCATION                nie  4.5374       3 0.2090  13.0145       3 0.0046         nie         tak poprawia precyzję                                  włączyć
+             CONTACT x AGE                nie 15.9841       2 0.0003   5.0539       2 0.0799         tak         nie     niewiele daje   włączyć (silny związek z r, słaby z Y)
+    CONTACT x HOUSING_LOAN                nie  3.4687       2 0.1765   8.5708       2 0.0138         nie         tak poprawia precyzję                                  włączyć
+        CONTACT x POUTCOME                nie  5.0195       3 0.1704   4.8583       3 0.1825         nie         nie        bez wpływu pominąć (wariant w analizie wrażliwości)
+       CONTACT x EDUCATION                nie  4.2059       6 0.6488   2.8568       6 0.8266         nie         nie        bez wpływu pominąć (wariant w analizie wrażliwości)
+Testy dla r: model braku z AGE liniowym (splajn nieistotny); testy dla Y: model Y na obserwowanych Y, interakcje przy AGE jako splajnie.
+
+### 4c. Projekt modelu imputacyjnego (propozycja na bramkę)
+                        element                                                                                                                                         propozycja
+             zmienna imputowana                                                                                        Y_NEWDEPOSIT; jedyna zmienna z brakami (2 879 obs., 25,47%)
+                         metoda regresja logistyczna z losowaniem parametrów z rozkładu a posteriori (mice: 'logreg'); braki tylko w Y, więc wystarczy jeden krok bez iteracji FCS
+     predyktory (efekty główne)                                                                                            CONTACT, HOUSING_LOAN, POUTCOME, EDUCATION (pomocnicza)
+                     postać AGE                                                                                             B-splajn sześcienny, 4 stopnie swobody (bs(age, df=4))
+                     interakcje                                                                                                    CONTACT x AGE (liniowo), CONTACT x HOUSING_LOAN
+             wyłączone z modelu                                                                          r (wskaźnik braku); CONTACT x POUTCOME i CONTACT x EDUCATION (nieistotne)
+               liczba imputacji                                                               pilotaż m = 20; docelowo m >= 100 x FMI kontrastu beta1 - beta2 (reguła von Hippela)
+                         ziarno                                                                                                                                             229090
+               łączenie wyników                                                                                 reguły Rubina dla beta1 - beta2 i jego błędu, exp dopiero na końcu
+warianty do analizy wrażliwości                                                                     K2 (bez interakcji), K6 (CONTACT x splajn AGE), K7 (wszystkie interakcje); MID
+Formuła (patsy/statsmodels): y ~ contact + house_loan + poutcome + education + bs(age, df=4) + cA:age + c0:age + cA:hl_no + c0:hl_no
+W R (mice): y ~ contact + house_loan + poutcome + education + splines::bs(age, df = 4) + contact:age + contact:house_loan
+
+### Podsumowanie
+Model braku (efekty główne): AUC = 0.517, łączny LR p = 0.2364, Little p = 0.2385
+Model braku + CONTACT x AGE: p = 0.0003, AUC = 0.526
+Model Y: AUC = 0.712, EDUCATION p = 0.0046, splajn AGE p = 2.507e-25, interakcje (przy splajnie) p = 0.0830
+Wybrany model imputacyjny (min AIC): K5: K2 + CONTACT x (AGE, HOUSING_LOAN)
+
+Pliki zapisane w: C:\Users\bubus\Documents\studia\projekt ZAB\repo\wyniki

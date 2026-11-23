@@ -1,0 +1,11 @@
+element,propozycja
+zmienna imputowana,"Y_NEWDEPOSIT; jedyna zmienna z brakami (2 879 obs., 25,47%)"
+metoda,"regresja logistyczna z losowaniem parametrów z rozkładu a posteriori (mice: 'logreg'); braki tylko w Y, więc wystarczy jeden krok bez iteracji FCS"
+predyktory (efekty główne),"CONTACT, HOUSING_LOAN, POUTCOME, EDUCATION (pomocnicza)"
+postać AGE,"B-splajn sześcienny, 4 stopnie swobody (bs(age, df=4))"
+interakcje,"CONTACT x AGE (liniowo), CONTACT x HOUSING_LOAN"
+wyłączone z modelu,r (wskaźnik braku); CONTACT x POUTCOME i CONTACT x EDUCATION (nieistotne)
+liczba imputacji,pilotaż m = 20; docelowo m >= 100 x FMI kontrastu beta1 - beta2 (reguła von Hippela)
+ziarno,229090
+łączenie wyników,"reguły Rubina dla beta1 - beta2 i jego błędu, exp dopiero na końcu"
+warianty do analizy wrażliwości,"K2 (bez interakcji), K6 (CONTACT x splajn AGE), K7 (wszystkie interakcje); MID"

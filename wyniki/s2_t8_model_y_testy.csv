@@ -1,0 +1,18 @@
+,LR chi2,df,p
+Type 3: contact,63.3742,2,0.0
+Type 3: age,0.6449,1,0.4219
+Type 3: house_loan,70.381,1,0.0
+Type 3: poutcome,378.7489,3,0.0
+Type 3: education,13.0145,3,0.0046
+EDUCATION ponad model docelowy,13.0145,3,0.0046
+nieliniowość AGE (B-splajn),117.6237,3,0.0
+interakcje (AGE liniowo): wszystkie łącznie,27.1073,13,0.012
+interakcje (AGE liniowo): contact x age,10.4806,2,0.0053
+interakcje (AGE liniowo): contact x house_loan,15.7868,2,0.0004
+interakcje (AGE liniowo): contact x poutcome,1.3069,3,0.7275
+interakcje (AGE liniowo): contact x education,4.4478,6,0.6163
+interakcje (AGE splajn): wszystkie łącznie,20.5203,13,0.083
+interakcje (AGE splajn): contact x age,5.0539,2,0.0799
+interakcje (AGE splajn): contact x house_loan,8.5708,2,0.0138
+interakcje (AGE splajn): contact x poutcome,4.8583,3,0.1825
+interakcje (AGE splajn): contact x education,2.8568,6,0.8266

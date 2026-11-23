@@ -1,0 +1,6 @@
+cecha,LR chi2,df,p
+contact,0.9019,2,0.637
+age,0.7286,1,0.3933
+house_loan,0.7072,1,0.4004
+poutcome,4.4831,3,0.2138
+education,4.5374,3,0.209

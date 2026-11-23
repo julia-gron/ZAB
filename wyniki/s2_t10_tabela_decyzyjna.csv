@@ -1,0 +1,11 @@
+element,w modelu docelowym,LR (r),df (r),p (r),LR (Y),df (Y),p (Y),związek z r,związek z Y,rola wg reguły,decyzja
+CONTACT,tak,0.9019,2,0.637,63.3742,2,0.0,nie,tak,poprawia precyzję,włączyć (cecha modelu docelowego)
+AGE (liniowo),tak,0.7286,1,0.3933,0.6449,1,0.4219,nie,nie,bez wpływu,włączyć (cecha modelu docelowego)
+"AGE (nieliniowo, B-splajn)",nie,3.5641,3,0.3125,117.6237,3,0.0,nie,tak,poprawia precyzję,włączyć
+HOUSING_LOAN,tak,0.7072,1,0.4004,70.381,1,0.0,nie,tak,poprawia precyzję,włączyć (cecha modelu docelowego)
+POUTCOME,tak,4.4831,3,0.2138,378.7489,3,0.0,nie,tak,poprawia precyzję,włączyć (cecha modelu docelowego)
+EDUCATION,nie,4.5374,3,0.209,13.0145,3,0.0046,nie,tak,poprawia precyzję,włączyć
+CONTACT x AGE,nie,15.9841,2,0.0003,5.0539,2,0.0799,tak,nie,niewiele daje,"włączyć (silny związek z r, słaby z Y)"
+CONTACT x HOUSING_LOAN,nie,3.4687,2,0.1765,8.5708,2,0.0138,nie,tak,poprawia precyzję,włączyć
+CONTACT x POUTCOME,nie,5.0195,3,0.1704,4.8583,3,0.1825,nie,nie,bez wpływu,pominąć (wariant w analizie wrażliwości)
+CONTACT x EDUCATION,nie,4.2059,6,0.6488,2.8568,6,0.8266,nie,nie,bez wpływu,pominąć (wariant w analizie wrażliwości)
