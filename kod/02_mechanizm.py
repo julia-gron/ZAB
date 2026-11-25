@@ -125,8 +125,18 @@ t_ttest = pd.DataFrame({
 print(t_ttest.round(2).to_string(index=False))
 print(f"Różnica średnich = {a0.mean() - a1.mean():.2f} roku, t = {tt.statistic:.3f}, "
       f"df = {len(a0) + len(a1) - 2}, p = {tt.pvalue:.4f}")
-t_ttest["t"], t_ttest["p"] = tt.statistic, tt.pvalue
-t_ttest.round(4).to_csv(OUT / "s2_t1_test_t_wiek.csv", index=False)
+t_ttest.round(4).to_csv(OUT / "s2_t1_wiek_wg_r.csv", index=False)
+
+# Uzupełnienie testu t: test Manna-Whitneya (czy rozkład wieku jest przesunięty)
+# i test Kołmogorowa-Smirnowa (czy rozkłady wieku mają ten sam kształt)
+mw = stats.mannwhitneyu(a0, a1)
+ks = stats.ks_2samp(a0, a1)
+t_testy_wiek = pd.DataFrame({
+    "test": ["t Studenta (równość średnich)", "Manna-Whitneya (przesunięcie rozkładu)",
+             "Kołmogorowa-Smirnowa (zgodność rozkładów)"],
+    "statystyka": [tt.statistic, mw.statistic, ks.statistic], "p": [tt.pvalue, mw.pvalue, ks.pvalue]})
+print(t_testy_wiek.round(4).to_string(index=False))
+t_testy_wiek.round(4).to_csv(OUT / "s2_t1_testy_wiek.csv", index=False)
 
 # =============================================================================
 # 2. METODA II: TEST CHI-KWADRAT DLA CECH SKOKOWYCH (slajd 94, PROC FREQ / CHISQ)
@@ -240,6 +250,21 @@ t_zk.round(4).to_csv(OUT / "s2_t9_zakup_wiek_kanal.csv", index=False)
 # Zbiorcza tabela testów ogólnych obu modeli
 pd.DataFrame({"model braku (P obserwacji Y)": og_r, "model Y (obserwowane Y)": og_y}).T.round(4) \
     .to_csv(OUT / "s2_t10_testy_globalne.csv")
+
+# Porównanie modeli bez interakcji i z interakcjami: -2 log L, AIC (jak 'Model Fit
+# Statistics' w PROC LOGISTIC) oraz test ilorazu wiarygodności dla modeli zagnieżdżonych
+print("\n### 4a. Porównanie modeli bez interakcji i z interakcjami")
+rows = []
+for nazwa, m0, m1 in [("model braku (P obserwacji Y)", m_r, m_r_int),
+                      ("model Y (obserwowane Y)", m_y, m_y_int)]:
+    lr = 2 * (m1.llf - m0.llf)
+    df_lr = int(m1.df_model - m0.df_model)
+    rows.append([nazwa, -2 * m0.llf, m0.aic, -2 * m1.llf, m1.aic, lr, df_lr, stats.chi2.sf(lr, df_lr)])
+t_por = pd.DataFrame(rows, columns=["model", "-2 log L bez interakcji", "AIC bez interakcji",
+                                    "-2 log L z interakcjami", "AIC z interakcjami",
+                                    "LR chi2", "df", "p"]).set_index("model")
+print(t_por.round(4))
+t_por.round(4).to_csv(OUT / "s2_t10a_porownanie_modeli.csv")
 
 
 # Wykresy: odsetek braków i odsetek zakupów według wieku i kanału (słupki w kolorach kanałów)

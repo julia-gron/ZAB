@@ -6,6 +6,10 @@ n = 11304, braki Y: 2879 (25.47%)
 Y obserwowane (r = 0) 8425          41.03       10.67
        brak Y (r = 1) 2879          40.94       10.41
 Różnica średnich = 0.09 roku, t = 0.391, df = 11302, p = 0.6957
+                                     test   statystyka      p
+            t Studenta (równość średnich) 3.911000e-01 0.6957
+   Manna-Whitneya (przesunięcie rozkładu) 1.211298e+07 0.9219
+Kołmogorowa-Smirnowa (zgodność rozkładów) 1.240000e-02 0.8918
 
 ### 2. Metoda II: odsetek braków Y w kategoriach cech, test chi-kwadrat
            cecha           kategoria      n  braki Y  odsetek braków  dolna 95%  górna 95%
@@ -130,6 +134,12 @@ Odsetek zakupów (obserwowane Y) według kanału i wieku:
          B: kanał B  41-50  132       8    0.061      0.031      0.115
          B: kanał B  51-60  158      15    0.095      0.058      0.151
          B: kanał B    61+   82      28    0.341      0.248      0.449
+
+### 4a. Porównanie modeli bez interakcji i z interakcjami
+                              -2 log L bez interakcji  AIC bez interakcji  -2 log L z interakcjami  AIC z interakcjami  LR chi2  df       p
+model                                                                                                                                      
+model braku (P obserwacji Y)               12815.6296          12837.6296               12794.1812          12836.1812  21.4484  10  0.0182
+model Y (obserwowane Y)                     5441.3097           5463.3097                5416.2955           5458.2955  25.0141  10  0.0053
 
 ### 5. Tabela decyzyjna
                element w modelu docelowym  p (brak Y)  p (Y) związek z brakiem związek z Y              rola decyzja

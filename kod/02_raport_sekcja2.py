@@ -24,6 +24,11 @@ def f(x, n=2):
     return f"{x:.{n}f}".replace(".", ",")
 
 
+def ft(x, n=1):
+    """Liczba z separatorem tysięcy (spacja) i przecinkiem dziesiętnym, np. 12 815,6."""
+    return f"{x:,.{n}f}".replace(",", " ").replace(".", ",")
+
+
 def fp(p):
     """Wartość p: '< 0,001' albo trzy miejsca po przecinku."""
     return "< 0,001" if p < .001 else f(p, 3)
@@ -92,7 +97,9 @@ def rysunek(plik, podpis, szer=16):
 
 
 # --- wyniki z 02_mechanizm.py
-ttest = pd.read_csv(W / "s2_t1_test_t_wiek.csv")
+wiek_r = pd.read_csv(W / "s2_t1_wiek_wg_r.csv")
+testy_wiek = pd.read_csv(W / "s2_t1_testy_wiek.csv")
+por = pd.read_csv(W / "s2_t10a_porownanie_modeli.csv", index_col=0)
 kat = pd.read_csv(W / "s2_t2_braki_wg_kategorii.csv")
 chi = pd.read_csv(W / "s2_t3_chi2_braki.csv", index_col=0)
 t3r = pd.read_csv(W / "s2_t4_model_braku_type3.csv", index_col=0)
@@ -121,17 +128,22 @@ akapit("W tej części sprawdzamy, czy prawdopodobieństwo braku wartości Y zal
 
 # 1.
 tytul("1. Ocena losowości braków danych")
-a0, a1 = ttest.iloc[0], ttest.iloc[1]
+a0, a1 = wiek_r.iloc[0], wiek_r.iloc[1]
+tt = testy_wiek.iloc[0]
 akapit("Losowość braków oceniamy dwiema metodami z wykładu. W metodzie I dzielimy zbiór według "
        "wskaźnika M na część z obserwowanym Y i część z brakiem Y i testem t porównujemy średni "
        "wiek w obu grupach. Średni wiek wynosi "
        f"{f(a0['średnia wieku'])} roku przy obserwowanym Y i {f(a1['średnia wieku'])} roku przy "
-       f"braku Y (t = {f(a0['t'], 3)}, p = {fp(a0['p'])}), więc różnica nie jest istotna "
-       "(tabela 4).")
-t = ttest[["grupa", "n", "średnia wieku", "odch. std."]].copy()
-t["n"] = t["n"].map(lambda x: f"{int(x):,}".replace(",", " "))
-t["średnia wieku"], t["odch. std."] = t["średnia wieku"].map(f), t["odch. std."].map(f)
-tabela(t, f"Średni wiek według wskaźnika braku Y (test t: t = {f(a0['t'], 3)}, p = {fp(a0['p'])}).")
+       f"braku Y (statystyki opisowe w tabeli 1), a różnica nie jest istotna (t = "
+       f"{f(tt['statystyka'], 3)}, p = {fp(tt['p'])}). Test t porównuje tylko średnie, dlatego "
+       "uzupełniająco sprawdzamy cały rozkład wieku testem Manna-Whitneya i testem "
+       "Kołmogorowa-Smirnowa. Oba potwierdzają wynik testu t (tabela 4).")
+t = testy_wiek.copy()
+t["statystyka"] = [f(tt["statystyka"], 3), f"{testy_wiek.iloc[1]['statystyka']:,.0f}".replace(",", " "),
+                   f(testy_wiek.iloc[2]["statystyka"], 4)]
+t["p"] = t["p"].map(fp)
+t.columns = ["Test", "Statystyka", "p"]
+tabela(t, "Testy porównujące wiek klientów z obserwowanym Y i z brakiem Y.")
 
 akapit("W metodzie II sprawdzamy związek wskaźnika M z cechami skokowymi testem chi-kwadrat "
        "niezależności i miarą asocjacji V Cramera. Wiek dzielimy w tym celu na przedziały. "
@@ -213,12 +225,30 @@ akapit("W modelu Y istotna jest interakcja CONTACT × HOUSING_LOAN "
        "między klientami z kredytem i bez kredytu zależy od kanału. Interakcja CONTACT × AGE "
        f"nie jest istotna (p = {fp(dr.loc['CONTACT × AGE', 'p (Y)'])}), a CONTACT × EDUCATION "
        f"również nie (p = {fp(dr.loc['CONTACT × EDUCATION', 'p (Y)'])}).")
+pr_, py_ = por.iloc[0], por.iloc[1]
+akapit("Oba modele porównaliśmy też z ich wersjami z interakcjami za pomocą testu ilorazu "
+       "wiarygodności i kryterium AIC (tabela 8). Dodanie interakcji poprawia dopasowanie modelu "
+       f"braku (p = {fp(pr_['p'])}, AIC spada z {ft(pr_['AIC bez interakcji'])} do "
+       f"{ft(pr_['AIC z interakcjami'])}) i modelu Y (p = {fp(py_['p'])}, AIC spada z "
+       f"{ft(py_['AIC bez interakcji'])} do {ft(py_['AIC z interakcjami'])}). Testy Walda "
+       "wskazują, które interakcje za to odpowiadają: w modelu braku CONTACT × AGE, a w modelu Y "
+       "CONTACT × HOUSING_LOAN.")
+t = por.reset_index()
+t = pd.DataFrame({"Model": ["prawdopodobieństwo obserwacji Y", "Y (obserwowane Y)"],
+                  "−2 log L bez interakcji": t["-2 log L bez interakcji"].map(ft),
+                  "AIC bez interakcji": t["AIC bez interakcji"].map(ft),
+                  "−2 log L z interakcjami": t["-2 log L z interakcjami"].map(ft),
+                  "AIC z interakcjami": t["AIC z interakcjami"].map(ft),
+                  "Test LR: chi-kwadrat (df)": [f"{f(x)} ({int(k)})" for x, k in zip(t["LR chi2"], t["df"])],
+                  "p": t["p"].map(fp)})
+tabela(t, "Porównanie modeli bez interakcji i z interakcjami CONTACT × AGE, CONTACT × "
+          "HOUSING_LOAN, CONTACT × EDUCATION.")
 rysunek("s2_w3_zakup_wiek_kanal.png", "Odsetek zakupów (Y=1) według wieku i kanału komunikacji "
         "(tylko obserwowane Y).")
 
 # 4.
 tytul("4. Cechy pomocnicze w imputacji – tabela decyzyjna")
-akapit("Tabela 8 zestawia związek każdej cechy i interakcji z brakiem Y i z Y (poziom istotności "
+akapit("Tabela 9 zestawia związek każdej cechy i interakcji z brakiem Y i z Y (poziom istotności "
        "0,05) i przypisuje jej rolę według reguły: cecha związana z brakiem i z Y usuwa "
        "obciążenie, cecha związana tylko z Y poprawia precyzję, a cecha związana tylko z "
        "brakiem niewiele daje. Cechy modelu docelowego wchodzą do modelu imputacyjnego zawsze, "
@@ -238,7 +268,7 @@ akapit("Żadna cecha nie jest związana jednocześnie z brakiem Y i z Y na pozio
 tytul("5. Projekt modelu imputacyjnego")
 akapit("Brakuje tylko Y, więc wzorzec braków jest monotoniczny i wystarczy jeden model "
        "imputacyjny: regresja logistyczna dla zmiennej skokowej (w SAS: PROC MI z instrukcją "
-       "MONOTONE LOGISTIC). Proponowaną specyfikację podaje tabela 9. Po imputacji model "
+       "MONOTONE LOGISTIC). Proponowaną specyfikację podaje tabela 10. Po imputacji model "
        "docelowy szacujemy w każdym ze 100 uzupełnionych zbiorów i łączymy wyniki regułami "
        "Rubina (PROC MIANALYZE). Przewidywane prawdopodobieństwa obserwacji Y z modelu z punktu "
        "2 zapisaliśmy w pliku s2_p_obserwacji.csv do metody wag w części 5.")
