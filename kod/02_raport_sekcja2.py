@@ -267,10 +267,9 @@ akapit("Żadna cecha nie jest związana jednocześnie z brakiem Y i z Y na pozio
 # 5.
 tytul("5. Projekt modelu imputacyjnego")
 akapit("Brakuje tylko Y, więc wzorzec braków jest monotoniczny i wystarczy jeden model "
-       "imputacyjny: regresja logistyczna dla zmiennej skokowej (w SAS: PROC MI z instrukcją "
-       "MONOTONE LOGISTIC). Proponowaną specyfikację podaje tabela 10. Po imputacji model "
-       "docelowy szacujemy w każdym ze 100 uzupełnionych zbiorów i łączymy wyniki regułami "
-       "Rubina (PROC MIANALYZE). Przewidywane prawdopodobieństwa obserwacji Y z modelu z punktu "
+       "imputacyjny: regresja logistyczna dla zmiennej skokowej Y. Proponowaną specyfikację "
+       "podaje tabela 10. Po imputacji model docelowy szacujemy w każdym ze 100 uzupełnionych "
+       "zbiorów i łączymy wyniki regułami Rubina. Przewidywane prawdopodobieństwa obserwacji Y z modelu z punktu "
        "2 zapisaliśmy w pliku s2_p_obserwacji.csv do metody wag w części 5.")
 t = spec.copy()
 t.columns = ["Element", "Propozycja"]

@@ -345,21 +345,17 @@ t_dec.round(4).to_csv(OUT / "s2_t11_tabela_decyzyjna.csv", index=False)
 
 # Projekt modelu imputacyjnego wynikający z tabeli decyzyjnej
 wlaczone = [NAZWY[e] for e, dec in zip(NAZWY, t_dec["decyzja"]) if dec.startswith("włączyć")]
-efekty_sas = [e.replace(":", "*") for e, dec in zip(NAZWY, t_dec["decyzja"]) if dec.startswith("włączyć")]
 spec = pd.DataFrame({
     "element": ["zmienna imputowana", "wzorzec braków", "metoda", "zmienne w modelu imputacyjnym",
-                "liczba imputacji", "ziarno", "łączenie wyników", "zapis w SAS"],
+                "liczba imputacji", "ziarno", "łączenie wyników"],
     "propozycja": [
         "Y_NEWDEPOSIT (jedyna zmienna z brakami: 2 879 obserwacji, 25,47%)",
         "monotoniczny (brakuje tylko Y)",
-        "regresja logistyczna dla zmiennej skokowej (PROC MI, MONOTONE LOGISTIC)",
+        "regresja logistyczna dla zmiennej skokowej (wzorzec monotoniczny)",
         ", ".join(wlaczone),
         "m = 100; efektywność (1 + γ/m)^(-1) sprawdzić po imputacji",
         str(S.SEED),
-        "model docelowy w każdym zbiorze, wyniki łączone regułami Rubina (PROC MIANALYZE)",
-        "proc mi nimpute=100 seed=" + str(S.SEED) + "; class y contact house_loan poutcome "
-        "education; monotone logistic(y = " + " ".join(efekty_sas) + "); var contact age "
-        "house_loan poutcome education y;"]})
+        "model docelowy w każdym zbiorze, wyniki łączone regułami Rubina"]})
 print("\nProjekt modelu imputacyjnego:\n", spec.to_string(index=False))
 spec.to_csv(OUT / "s2_t12_projekt_modelu_imputacyjnego.csv", index=False)
 print("\nPliki zapisane w:", OUT)
