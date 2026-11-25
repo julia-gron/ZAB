@@ -2,7 +2,7 @@
 # Punkt 2: mechanizm braków danych w Y
 # Czy prawdopodobieństwo braku Y zależy od pozostałych cech i czy są cechy,
 # za pomocą których imputacja może skorygować oszacowania?
-# Metody jak na wykładzie (slajdy 94 i 103):
+# Zastosowane metody:
 #   Metoda I  - test t różnicy średnich wieku między grupami braku (PROC TTEST)
 #   Metoda II - test chi-kwadrat i V Cramera dla cech skokowych (PROC FREQ / CHISQ)
 #   Model logistyczny prawdopodobieństwa obserwacji Y, P(M = 0) (PROC LOGISTIC)
@@ -45,8 +45,8 @@ d["kanal"] = d["contact"].astype(int).map(LAB)
 ORDER = [LAB[0], LAB[1], LAB[2]]
 COL = {LAB[0]: "#8c8c8c", LAB[1]: "#1f77b4", LAB[2]: "#ff7f0e"}   # kolory kanałów jak u Osoby 1
 NIEBIESKI = "#4c72b0"                                              # kolor słupków jak u Osoby 1
-# Wskaźnik braku: na wykładzie M (1 = brak). W kodzie grupy nazywa się r (00_setup.py).
-# Model logistyczny opisuje, jak na slajdzie 103, prawdopodobieństwo obserwacji Y: P(M = 0).
+# Wskaźnik braku M (1 = brak Y). W kodzie grupy nazywa się r (00_setup.py).
+# Model logistyczny opisuje prawdopodobieństwo obserwacji Y: P(M = 0).
 d["obs_y"] = 1 - d["r"]                                   # 1 = Y zaobserwowane
 # Wiek w przedziałach (do tabel i wykresów)
 PRZ, ETP = [17, 30, 40, 50, 60, 100], ["18-30", "31-40", "41-50", "51-60", "61+"]
@@ -113,7 +113,7 @@ def ogolny_test(m, data, y):
 
 
 # =============================================================================
-# 1. METODA I: TEST t RÓŻNICY ŚREDNICH WIEKU (slajd 94, PROC TTEST)
+# 1. METODA I: TEST t RÓŻNICY ŚREDNICH WIEKU (PROC TTEST)
 # =============================================================================
 print("\n### 1. Metoda I: test t dla wieku według r")
 a0, a1 = d.loc[d.r == 0, "age"], d.loc[d.r == 1, "age"]
@@ -139,7 +139,7 @@ print(t_testy_wiek.round(4).to_string(index=False))
 t_testy_wiek.round(4).to_csv(OUT / "s2_t1_testy_wiek.csv", index=False)
 
 # =============================================================================
-# 2. METODA II: TEST CHI-KWADRAT DLA CECH SKOKOWYCH (slajd 94, PROC FREQ / CHISQ)
+# 2. METODA II: TEST CHI-KWADRAT DLA CECH SKOKOWYCH (PROC FREQ / CHISQ)
 # =============================================================================
 print("\n### 2. Metoda II: odsetek braków Y w kategoriach cech, test chi-kwadrat")
 CECHY_T = {"kanal": "CONTACT", "house_loan": "HOUSING_LOAN", "education": "EDUCATION",
@@ -190,7 +190,7 @@ fig.text(.01, .01, f"Linia przerywana: średni odsetek braków w całej próbie 
 save("s2_w1_braki_wg_cech.png", rect=(0, .04, 1, .95))
 
 # =============================================================================
-# 3. MODEL LOGISTYCZNY PRAWDOPODOBIEŃSTWA OBSERWACJI Y, P(M = 0) (slajd 103)
+# 3. MODEL LOGISTYCZNY PRAWDOPODOBIEŃSTWA OBSERWACJI Y, P(M = 0)
 # =============================================================================
 print("\n### 3. Model logistyczny P(Y zaobserwowane | cechy)")
 GLOWNE = "contact + age + house_loan + poutcome + education"
@@ -205,9 +205,8 @@ print("Ilorazy szans obserwacji Y:\n", or_r.round(4))
 t3_r.round(4).to_csv(OUT / "s2_t4_model_braku_type3.csv")
 or_r.round(4).to_csv(OUT / "s2_t5_model_braku_or.csv")
 
-# 3a. Czy cechy działają na brak Y tak samo w każdym kanale? Interakcje z CONTACT
-# (jak interakcja j3*lnCost w przykładzie BEEPS2009, slajd 157). Interakcji
-# CONTACT x POUTCOME nie badamy: w kanale 0 aż 99,3% klientów ma poutcome = unknown.
+# 3a. Czy cechy działają na brak Y tak samo w każdym kanale? Interakcje z CONTACT.
+# Interakcji CONTACT x POUTCOME nie badamy: w kanale 0 aż 99,3% klientów ma poutcome = unknown.
 INTER = "contact:age + contact:house_loan + contact:education"
 m_r_int = logit(f"obs_y ~ {GLOWNE} + {INTER}", d)
 t3_r_int = type3(m_r_int).loc[["contact:age", "contact:house_loan", "contact:education"]]
@@ -218,7 +217,7 @@ t_wk = odsetki(d, "r", ["kanal", "wiek_p"]).reset_index()
 print("\nOdsetek braków Y według kanału i wieku:\n", t_wk.round(3).to_string(index=False))
 t_wk.round(4).to_csv(OUT / "s2_t6_braki_wiek_kanal.csv", index=False)
 
-# 3b. P(Y zaobserwowane | X) dla każdej obserwacji -> wagi IPW (Osoba 4, slajdy 102-103)
+# 3b. P(Y zaobserwowane | X) dla każdej obserwacji -> wagi IPW (Osoba 4)
 p_obs = pd.DataFrame({"wiersz": np.arange(len(d)), "r": d["r"], "p_obs": m_r.predict(d)})
 p_obs.to_csv(OUT / "s2_p_obserwacji.csv", index=False)
 print(f"\nP(r = 0 | X) zapisane do s2_p_obserwacji.csv, zakres {p_obs.p_obs.min():.3f}-"
@@ -355,7 +354,7 @@ spec = pd.DataFrame({
         "monotoniczny (brakuje tylko Y)",
         "regresja logistyczna dla zmiennej skokowej (PROC MI, MONOTONE LOGISTIC)",
         ", ".join(wlaczone),
-        "m = 100; efektywność (1 + γ/m)^(-1) sprawdzić po imputacji (slajd 154)",
+        "m = 100; efektywność (1 + γ/m)^(-1) sprawdzić po imputacji",
         str(S.SEED),
         "model docelowy w każdym zbiorze, wyniki łączone regułami Rubina (PROC MIANALYZE)",
         "proc mi nimpute=100 seed=" + str(S.SEED) + "; class y contact house_loan poutcome "

@@ -122,7 +122,7 @@ tytul("Część 2: mechanizm braków danych")
 akapit("W tej części sprawdzamy, czy prawdopodobieństwo braku wartości Y zależy od pozostałych "
        "cech i czy istnieją cechy, za pomocą których imputacja może skorygować oszacowania "
        "(punkt 2 zadania). Braki występują tylko w Y (2 879 z 11 304 klientów, 25,47%). "
-       "Wskaźnik braku oznaczamy, jak na wykładzie, przez M (M = 1: brak Y, M = 0: Y "
+       "Wskaźnik braku oznaczamy przez M (M = 1: brak Y, M = 0: Y "
        "obserwowane); w kodzie jest to zmienna r. Cecha nadaje się do korekty oszacowań, gdy "
        "jest związana jednocześnie z brakiem Y i z samym Y.")
 
@@ -130,7 +130,7 @@ akapit("W tej części sprawdzamy, czy prawdopodobieństwo braku wartości Y zal
 tytul("1. Ocena losowości braków danych")
 a0, a1 = wiek_r.iloc[0], wiek_r.iloc[1]
 tt = testy_wiek.iloc[0]
-akapit("Losowość braków oceniamy dwiema metodami z wykładu. W metodzie I dzielimy zbiór według "
+akapit("Losowość braków oceniamy dwiema metodami. W pierwszej dzielimy zbiór według "
        "wskaźnika M na część z obserwowanym Y i część z brakiem Y i testem t porównujemy średni "
        "wiek w obu grupach. Średni wiek wynosi "
        f"{f(a0['średnia wieku'])} roku przy obserwowanym Y i {f(a1['średnia wieku'])} roku przy "
@@ -145,7 +145,7 @@ t["p"] = t["p"].map(fp)
 t.columns = ["Test", "Statystyka", "p"]
 tabela(t, "Testy porównujące wiek klientów z obserwowanym Y i z brakiem Y.")
 
-akapit("W metodzie II sprawdzamy związek wskaźnika M z cechami skokowymi testem chi-kwadrat "
+akapit("W drugiej metodzie sprawdzamy związek wskaźnika M z cechami skokowymi testem chi-kwadrat "
        "niezależności i miarą asocjacji V Cramera. Wiek dzielimy w tym celu na przedziały. "
        "Odsetek braków Y jest podobny we wszystkich kategoriach wszystkich cech i bliski "
        "średniej 25,5% (rysunek 6). Żaden test nie wykazuje istotnego związku, a V Cramera "
@@ -161,8 +161,8 @@ rysunek("s2_w1_braki_wg_cech.png", "Odsetek braków Y w kategoriach cech.")
 
 # 2.
 tytul("2. Model logistyczny prawdopodobieństwa obserwacji Y")
-akapit("Wszystkie cechy jednocześnie uwzględnia model regresji logistycznej, w którym, jak na "
-       "slajdzie o ocenie skłonności do odpowiedzi, modelujemy prawdopodobieństwo obserwacji Y, "
+akapit("Wszystkie cechy jednocześnie uwzględnia model regresji logistycznej, w którym "
+       "modelujemy prawdopodobieństwo obserwacji Y (skłonność do udzielenia odpowiedzi), "
        "czyli P(M = 0), względem cech CONTACT, AGE, HOUSING_LOAN, POUTCOME i EDUCATION. Test "
        f"ilorazu wiarygodności dla całego modelu daje chi-kwadrat = {f(gr['LR chi2'])} przy "
        f"{int(gr['df'])} stopniach swobody (p = {fp(gr['p'])}), a żadna cecha nie jest istotna "
@@ -279,7 +279,7 @@ tabela(t, "Proponowana specyfikacja modelu imputacyjnego.", num_od=9)
 # 6.
 tytul("6. Wnioski")
 akapit("Ani test t, ani testy chi-kwadrat, ani model logistyczny nie wykazały związku braku Y z "
-       "pojedynczymi cechami, co według kryteriów z wykładu wskazuje na mechanizm MCAR. Jedynym "
+       "pojedynczymi cechami. Brak istotnych różnic wskazuje na mechanizm MCAR. Jedynym "
        "odstępstwem jest zależność braku od wieku w kanale B. Wiek i kanał są w modelu "
        "docelowym, a zależność ta jest słaba (c = "
        f"{f(gr['c (AUC)'], 3)}), więc spodziewamy się, że wynik imputacji wielokrotnej będzie "
