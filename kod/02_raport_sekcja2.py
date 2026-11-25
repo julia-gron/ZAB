@@ -124,6 +124,12 @@ akapit("Model logistyczny r ~ CONTACT + AGE + HOUSING_LOAN + POUTCOME + EDUCATIO
 t = orr.reset_index()
 t.columns = ["parametr", "beta", "SE", "OR", "dolna 95%", "górna 95%", "p"]
 t = t[["parametr", "OR", "dolna 95%", "górna 95%", "p"]]
+t["parametr"] = t["parametr"].map({
+    "contact[T.0]": "CONTACT 0 wobec B", "contact[T.1]": "CONTACT A wobec B",
+    "house_loan[T.no]": "HOUSING_LOAN no wobec yes", "poutcome[T.failure]": "POUTCOME failure",
+    "poutcome[T.success]": "POUTCOME success", "poutcome[T.other]": "POUTCOME other",
+    "education[T.primary]": "EDUCATION primary", "education[T.tertiary]": "EDUCATION tertiary",
+    "education[T.unknown]": "EDUCATION unknown", "age": "AGE (1 rok)"})
 for c in ["OR", "dolna 95%", "górna 95%"]:
     t[c] = t[c].map(lambda x: f(x, 3))
 t["p"] = t["p"].map(fp)
@@ -140,7 +146,7 @@ ca = testy_r.loc["interakcje: contact x age"]
 akapit("Model z samymi efektami głównymi zakłada, że każda cecha działa na brak Y tak samo w "
        "każdym kanale. Łączny test interakcji CONTACT × cecha daje p = "
        f"{fp(testy_r.loc['interakcje: wszystkie łącznie', 'p'])}, a za tę zależność odpowiada "
-       f"interakcja CONTACT × AGE (chi2 = {f(ca['LR chi2'])}, df = 2, p = {fp(ca['p'])}). "
+       f"interakcja CONTACT × AGE (chi2 = {f(ca['LR chi2'])}, df = 2, p = {f(ca['p'], 4)}). "
        "Wynik utrzymuje się po poprawce Bonferroniego na kilkanaście testów wykonanych w tej "
        "sekcji (próg 0,003). Interakcję CONTACT × POUTCOME testowano tylko dla kanału A wobec B, "
        "bo w kanale 0 jedynie 23 klientów ma poutcome inne niż unknown.")
@@ -159,7 +165,7 @@ akapit("W kanale B szansa braku Y spada z wiekiem (OR = 0,82 na 10 lat, p = 0,00
        "zależność jest odwrotna i słabsza (OR = 1,10, p = 0,027), w kanale A jej nie ma. "
        "Jednocześnie zależność szansy zakupu od wieku ma kształt litery U we wszystkich kanałach: "
        "najczęściej kupują klienci najmłodsi i powyżej 60 lat (w kanale B: 22% w wieku 18–30, "
-       "6–9% w wieku 31–60, 34% powyżej 60 lat). Wśród obserwowanych Y kanału B najmłodsi są "
+       "6–10% w wieku 31–60, 34% powyżej 60 lat). Wśród obserwowanych Y kanału B najmłodsi są "
        "więc niedoreprezentowani, a najstarsi nadreprezentowani, a obie te grupy kupują znacznie "
        "częściej niż klienci w średnim wieku. Kierunek ewentualnego obciążenia nie jest "
        "oczywisty i zależy od tego, jak model docelowy (wiek liniowo) uśrednia ten kształt. Wiek jest zatem "
