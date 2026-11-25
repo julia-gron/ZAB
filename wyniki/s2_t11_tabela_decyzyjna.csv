@@ -1,0 +1,9 @@
+element,w modelu docelowym,p (brak Y),p (Y),związek z brakiem,związek z Y,rola,decyzja
+CONTACT,tak,0.6366,0.0,nie,tak,poprawia precyzję,włączyć
+AGE,tak,0.3936,0.4225,nie,nie,bez wpływu,włączyć
+HOUSING_LOAN,tak,0.4003,0.0,nie,tak,poprawia precyzję,włączyć
+POUTCOME,tak,0.2251,0.0,nie,tak,poprawia precyzję,włączyć
+EDUCATION,nie,0.2005,0.0063,nie,tak,poprawia precyzję,włączyć
+CONTACT × AGE,nie,0.0011,0.073,tak,nie,niewiele daje,pominąć
+CONTACT × HOUSING_LOAN,nie,0.6107,0.0071,nie,tak,poprawia precyzję,włączyć
+CONTACT × EDUCATION,nie,0.6111,0.7476,nie,nie,bez wpływu,pominąć
