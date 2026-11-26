@@ -1,0 +1,39 @@
+kontrola,z tabeli,z danych,zgodne
+t1: n ogółem = liczba klientów,11304.0,11304,tak
+t1: suma n w kanałach = n ogółem,11304.0,11304,tak
+t1: suma n wg r = n ogółem,11304.0,11304,tak
+t1: średni wiek ogółem,41.0,41.0,tak
+t1: mediana wieku w kanale B,47.0,47.0,tak
+"t2: contact, suma liczności = 11304",11304,11304,tak
+"t2: contact, suma % = 100",100.0,100,tak
+"t2: house_loan, suma liczności = 11304",11304,11304,tak
+"t2: house_loan, suma % = 100",100.0,100,tak
+"t2: education, suma liczności = 11304",11304,11304,tak
+"t2: education, suma % = 100",100.0,100,tak
+"t2: poutcome, suma liczności = 11304",11304,11304,tak
+"t2: poutcome, suma % = 100",100.0,100,tak
+"t2: y, suma liczności = 11304",11304,11304,tak
+"t2: y, suma % = 100",100.0,100,tak
+t2: Y=1,998,998,tak
+t2: braki Y,2879,2879,tak
+"t3 house_loan: liczności kanałów (0, A, B)","[np.int64(3294), np.int64(7277), np.int64(733)]","[3294, 7277, 733]",tak
+t3 house_loan: suma = 11304,11304,11304,tak
+t3 house_loan: % w kanale sumują się do 100,"[100.0, 100.0, 100.0]","[100, 100, 100]",tak
+"t3 education: liczności kanałów (0, A, B)","[np.int64(3294), np.int64(7277), np.int64(733)]","[3294, 7277, 733]",tak
+t3 education: suma = 11304,11304,11304,tak
+t3 education: % w kanale sumują się do 100,"[100.0, 100.0, 99.9]","[100, 100, 100]",tak
+"t3 poutcome: liczności kanałów (0, A, B)","[np.int64(3294), np.int64(7277), np.int64(733)]","[3294, 7277, 733]",tak
+t3 poutcome: suma = 11304,11304,11304,tak
+t3 poutcome: % w kanale sumują się do 100,"[100.0, 100.0, 99.9]","[100, 100, 100]",tak
+t4: suma n_obs = liczba obserwowanych Y,8425,8425,tak
+t4: suma Y=1 = liczba zakupów,998,998,tak
+t4: odsetek Y=1 w kanale A,0.1495,0.1495,tak
+t5 house_loan: suma n_obs = obserwowane Y,8425,8425,tak
+t5 house_loan: suma Y=1 = zakupy,998,998,tak
+t5 poutcome: suma n_obs = obserwowane Y,8425,8425,tak
+t5 poutcome: suma Y=1 = zakupy,998,998,tak
+t6: braki tylko w Y,0,0,tak
+t7: wzorce sumują się do N,11304,11304,tak
+t8: suma braków Y w kanałach,2879,2879,tak
+t8: suma n w kanałach,11304,11304,tak
+t9: SMD wieku A wobec B (pełna próba),0.5755,0.5755,tak

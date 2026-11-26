@@ -1,0 +1,7 @@
+kierunek,strona,t,deltaA,deltaB,exp(deltaA),exp(deltaB),OR A wobec B,wniosek po przełamaniu
+tylko kanał A (δB = 0),t > 0,0.4,0.4,0.0,1.4918,1.0,1.3406,A istotnie lepszy
+tylko kanał A (δB = 0),t < 0,,,,,,,brak przełamania w zakresie |t| ≤ 3
+tylko kanał B (δA = 0),t > 0,1.4,0.0,1.4,1.0,4.0552,0.753,B istotnie lepszy
+tylko kanał B (δA = 0),t < 0,-0.5,-0.0,-0.5,1.0,0.6065,1.3335,A istotnie lepszy
+przeciwne (δB = −δA),t > 0,0.3,0.3,-0.3,1.3499,0.7408,1.3838,A istotnie lepszy
+przeciwne (δB = −δA),t < 0,-1.0,-1.0,1.0,0.3679,2.7183,0.7252,B istotnie lepszy
