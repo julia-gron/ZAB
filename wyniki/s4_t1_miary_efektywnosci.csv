@@ -1,0 +1,5 @@
+miara,wartość
+liczba imputacji m,500.0
+względny wzrost wariancji,0.3337
+frakcja brakującej informacji (FMI),0.2504
+efektywność (1 + FMI/m)^(-1),0.9995

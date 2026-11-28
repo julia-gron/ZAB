@@ -1,5 +1,0 @@
-model wag,wariant,min,Q1,mediana,Q3,max,max/min,efektywna liczebność
-model braku z punktu 2,bez przycinania,0.9346,0.9922,1.001,1.0086,1.0831,1.159,8421.7474
-model braku z punktu 2,przycięte do 1.–99. percentyla,0.9431,0.9922,1.001,1.0086,1.0685,1.133,8421.8493
-model braku z CONTACT × AGE,bez przycinania,0.84,0.9881,0.9974,1.0077,1.2892,1.5348,8417.5418
-model braku z CONTACT × AGE,przycięte do 1.–99. percentyla,0.931,0.9881,0.9974,1.0077,1.1043,1.1861,8418.6998

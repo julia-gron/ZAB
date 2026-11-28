@@ -2,9 +2,15 @@
 # Konfiguracja - wczytanie i rekodowanie danych
 # =============================================================================
 
+import sys
 from pathlib import Path
 import numpy as np
 import pandas as pd
+
+# Polskie znaki i symbole (γ, ×, δ) na każdej konsoli, także w Windows
+for strumien in (sys.stdout, sys.stderr):
+    if hasattr(strumien, "reconfigure"):
+        strumien.reconfigure(encoding="utf-8", errors="replace")
 
 # 1. LOKALIZACJA ROBOCZA 
 BASE = Path(__file__).resolve().parent.parent   # folder projektu (nad kod/)

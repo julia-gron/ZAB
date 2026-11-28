@@ -353,7 +353,7 @@ spec = pd.DataFrame({
         "monotoniczny (brakuje tylko Y)",
         "regresja logistyczna dla zmiennej skokowej (wzorzec monotoniczny)",
         ", ".join(wlaczone),
-        "m = 100; efektywność (1 + γ/m)^(-1) sprawdzić po imputacji",
+        "m = 500; efektywność (1 + γ/m)^(-1) sprawdzić po imputacji",
         str(S.SEED),
         "model docelowy w każdym zbiorze, wyniki łączone regułami Rubina"]})
 print("\nProjekt modelu imputacyjnego:\n", spec.to_string(index=False))

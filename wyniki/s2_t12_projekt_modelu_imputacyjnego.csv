@@ -3,6 +3,6 @@ zmienna imputowana,"Y_NEWDEPOSIT (jedyna zmienna z brakami: 2 879 obserwacji, 25
 wzorzec braków,monotoniczny (brakuje tylko Y)
 metoda,regresja logistyczna dla zmiennej skokowej (wzorzec monotoniczny)
 zmienne w modelu imputacyjnym,"CONTACT, AGE, HOUSING_LOAN, POUTCOME, EDUCATION, CONTACT × HOUSING_LOAN"
-liczba imputacji,m = 100; efektywność (1 + γ/m)^(-1) sprawdzić po imputacji
+liczba imputacji,m = 500; efektywność (1 + γ/m)^(-1) sprawdzić po imputacji
 ziarno,229090
 łączenie wyników,"model docelowy w każdym zbiorze, wyniki łączone regułami Rubina"

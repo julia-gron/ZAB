@@ -1,0 +1,5 @@
+kierunek,strona,delta,exp(delta),OR A wobec B,wniosek
+tylko kanał A (δB = 0),delta > 0,0.5,1.6487,1.3766,A istotnie lepszy
+tylko kanał A (δB = 0),delta < 0,,,,brak przełamania dla |delta| ≤ 2
+tylko kanał B (δA = 0),delta > 0,1.5,4.4817,0.7363,B istotnie lepszy
+tylko kanał B (δA = 0),delta < 0,-0.75,0.4724,1.3787,A istotnie lepszy

@@ -1,6 +1,6 @@
 ,wartość
-beta1 (A wobec braku komunikacji),0.8752378374302594
-beta2 (B wobec braku komunikacji),0.6981140713243387
-"Cov(beta1, beta2)",0.010858430666851085
-beta1 - beta2,0.17712376610592073
+beta1 (A wobec braku komunikacji),0.8752378374302618
+beta2 (B wobec braku komunikacji),0.6981140713243454
+"Cov(beta1, beta2)",0.010858430666851096
+beta1 - beta2,0.1771237661059164
 SE(beta1 - beta2),0.14201894738717566

@@ -1,56 +1,16 @@
 # =============================================================================
 # Sekcja 3 raportu (modele przy MCAR i MAR) -> raport/03_raport_czesc3.docx
 # Uruchamiać PO 03_modele.py: liczby są czytane z plików s3_*.csv w wyniki/.
-# Wymaga: python-docx.
+# Wygląd jak w części 1 (moduł raport_styl.py). Wymaga: python-docx.
 # =============================================================================
 import importlib
 import pandas as pd
-from docx import Document
-from docx.shared import Pt
+from raport_styl import Raport, f, fp, S
 
-S = importlib.import_module("00_setup")
 W = S.WYNIKI
-RAPORT = S.BASE / "raport"
-RAPORT.mkdir(exist_ok=True)
-
-
-def f(x, n=2):
-    """Liczba w zapisie polskim."""
-    return f"{x:.{n}f}".replace(".", ",")
-
-
-def fp(p):
-    return "< 0,001" if p < .001 else f(p, 3)
-
-
-doc = Document()
-st = doc.styles["Normal"]
-st.font.name, st.font.size = "Calibri", Pt(11)
-licznik = {"tab": 0}
-
-
-def akapit(t):
-    doc.add_paragraph(t).paragraph_format.space_after = Pt(6)
-
-
-def tabela(df, tytul):
-    licznik["tab"] += 1
-    p = doc.add_paragraph()
-    p.add_run(f"Tabela 3.{licznik['tab']}. ").bold = True
-    p.add_run(tytul).italic = True
-    t = doc.add_table(rows=1, cols=len(df.columns), style="Light Grid Accent 1")
-    for i, c in enumerate(df.columns):
-        t.rows[0].cells[i].text = str(c)
-    for _, row in df.iterrows():
-        cells = t.add_row().cells
-        for i, v in enumerate(row):
-            cells[i].text = str(v)
-    for row in t.rows:
-        for c in row.cells:
-            for par in c.paragraphs:
-                for r in par.runs:
-                    r.font.size = Pt(9)
-    doc.add_paragraph()
+# Numeracja ciągła w całym raporcie: części 1-2 kończą się na tabeli 10 i rysunku 8
+R = Raport(nr_tab=11, nr_rys=9)
+akapit, tabela = R.akapit, R.tabela
 
 
 # --- dane z wyników 03_modele.py
@@ -65,13 +25,13 @@ M = int(rub["m (liczba imputacji)"])
 dane = S.load_clean()
 kanal_b = dane[dane["contact"] == "2"]
 sukces_b = kanal_b.groupby("r")["poutcome"].apply(lambda s: 100 * (s == "success").mean())
-n_obs, n_brak = 8425, 2879
+n_obs, n_brak = int((dane["r"] == 0).sum()), int((dane["r"] == 1).sum())
 
 # =============================================================================
-doc.add_heading("Część 3: model regresji logistycznej przy założeniach MCAR i MAR", level=1)
+R.tytul("Część 3: model regresji logistycznej przy założeniach MCAR i MAR")
 
 # --- 3.1 Model docelowy
-doc.add_heading("3.1. Model docelowy", level=2)
+R.tytul("1. Model docelowy")
 akapit("Szacujemy model logitowy z treści zadania. Po lewej stronie wzoru jest logit "
        "prawdopodobieństwa zakupu, czyli logarytm szansy:")
 akapit("logit P(Y_NEWDEPOSIT = 1 | X) = β0 + β1·CONTACT_A + β2·CONTACT_B + β3·AGE + "
@@ -86,7 +46,7 @@ akapit("Kodowanie cech jest takie jak w przykładowym kodzie z zadania: dla CONT
        "wpływ pozostałych cech.")
 
 # --- 3.2 MCAR
-doc.add_heading("3.2. Model przy założeniu MCAR – analiza kompletnych przypadków", level=2)
+R.tytul("2. Model przy założeniu MCAR – analiza kompletnych przypadków")
 akapit(f"Przy założeniu MCAR braki są czysto przypadkowe, więc klienci z obserwowanym Y są "
        f"losową częścią całej próby. Wystarczy wtedy usunąć {n_brak} klientów bez Y i "
        f"oszacować model na pozostałych {n_obs}. Oszacowania nie są obciążone, tracimy tylko "
@@ -105,10 +65,10 @@ t = pd.DataFrame({"Parametr": [nazwy[i] for i in cc.index],
                   "Błąd": [f(x, 3) for x in cc["SE"]],
                   "p": [fp(x) for x in cc["p"]],
                   "OR": ["–" if i == "Intercept" else f(x) for i, x in zip(cc.index, cc["OR"])]})
-tabela(t, f"Model docelowy na kompletnych przypadkach (n = {n_obs})")
+tabela(t, f"Model docelowy na kompletnych przypadkach (n = {n_obs}).")
 
 akapit(f"Kanał A ma szansę zakupu {f(mcar['OR A wobec B'])} raza większą niż kanał B "
-       f"(95% CI: {f(mcar['OR dolna 95%'])}–{f(mcar['OR górna 95%'])}, p = {fp(mcar['p'])}). "
+       f"(95% PU: {f(mcar['OR dolna 95%'])}–{f(mcar['OR górna 95%'])}, p = {fp(mcar['p'])}). "
        f"Przedział zawiera 1, więc różnica między kanałami nie jest istotna statystycznie. "
        f"Pozostałe cechy działają zgodnie z oczekiwaniami: klienci bez komunikacji mają szansę "
        f"zakupu około dwa razy mniejszą niż w kanale B, sukces w poprzedniej kampanii zwiększa "
@@ -120,7 +80,7 @@ akapit(f"Kontrola kontrastu: ten sam model z poziomem odniesienia „brak komuni
        f"identyczny wynik, więc kontrast A wobec B jest policzony poprawnie.")
 
 # --- 3.3 MAR
-doc.add_heading("3.3. Model przy założeniu MAR – imputacja wielokrotna", level=2)
+R.tytul("3. Model przy założeniu MAR – imputacja wielokrotna")
 akapit("Założenie MAR mówi, że brak Y może zależeć od obserwowanych cech klienta, ale nie od "
        "samego zakupu. Jest słabsze niż MCAR (MCAR jest jego szczególnym przypadkiem), więc "
        "imputacja przy MAR jest poprawna także wtedy, gdy braki są całkowicie losowe. "
@@ -139,11 +99,11 @@ spec = pd.DataFrame({
         "regresja logistyczna z losowaniem parametrów",
         "CONTACT, AGE, HOUSING_LOAN, POUTCOME, EDUCATION (cecha pomocnicza)",
         "CONTACT × HOUSING_LOAN",
-        "wskaźnik braku r",
+        "wskaźnik braku M (w kodzie r)",
         f"m = {M}; efektywność (1 + FMI/m)⁻¹ = {f(rub['efektywność'], 3)}",
         str(S.SEED),
         "reguły Rubina dla β1 − β2 i jego błędu; exp liczone na końcu"]})
-tabela(spec, "Specyfikacja modelu imputacyjnego")
+tabela(spec, "Specyfikacja modelu imputacyjnego.", num_od=2)
 
 akapit(f"Jedna imputacja przebiega w trzech krokach. (1) Model imputacyjny jest dopasowany na "
        f"klientach z Y, a z rozkładu jego oszacowań losujemy nowy zestaw współczynników – "
@@ -158,7 +118,7 @@ t = pd.DataFrame({"Kanał": ["B", "brak komunikacji", "A"],
                                     for k in [2, 0, 1]],
                   "Imputowane Y (średnio)": [f"{100 * spr.loc[k, 'imputowane Y']:.1f}%".replace(".", ",")
                                              for k in [2, 0, 1]]})
-tabela(t, "Odsetek klientów z Y = 1 wśród obserwowanych i imputowanych")
+tabela(t, "Odsetek klientów z Y = 1 wśród obserwowanych i imputowanych.")
 akapit(f"W kanale A i w grupie bez komunikacji odsetek zakupów wśród imputowanych jest taki "
        f"sam jak wśród obserwowanych. W kanale B jest niższy i nie jest to błąd imputacji. "
        f"Klienci kanału B bez Y rzadziej mieli sukces w poprzedniej kampanii ({f(sukces_b[1], 1)}% "
@@ -177,26 +137,26 @@ t = pd.DataFrame({"Miara": ["β1 − β2 (średnia z imputacji)", "Wariancja wew
                               f(rub["błąd standardowy"], 4),
                               f(rub["stopnie swobody"], 0),
                               f(rub["FMI"], 3)]})
-tabela(t, f"Połączenie wyników z {M} imputacji regułami Rubina")
+tabela(t, f"Połączenie wyników z {M} imputacji regułami Rubina.")
 akapit(f"Wariancja całkowita składa się z dwóch części: zwykłej niepewności wynikającej z "
        f"próby (wariancja wewnątrz imputacji) oraz dodatkowej niepewności z powodu braków "
        f"(wariancja między imputacjami). FMI = {f(mar['FMI'])} oznacza, że braki odebrały "
        f"około {round(100 * mar['FMI'])}% informacji o różnicy między kanałami, czyli mniej "
        f"więcej tyle, ile wynosi odsetek braków Y. Kanał A ma szansę zakupu {f(mar['OR A wobec B'])} raza większą "
-       f"niż kanał B (95% CI: {f(mar['OR dolna 95%'])}–{f(mar['OR górna 95%'])}, "
+       f"niż kanał B (95% PU: {f(mar['OR dolna 95%'])}–{f(mar['OR górna 95%'])}, "
        f"p = {fp(mar['p'])}).")
 
 # --- 3.4 Porównanie
-doc.add_heading("3.4. Porównanie wyników przy MCAR i MAR", level=2)
+R.tytul("4. Porównanie wyników przy MCAR i MAR")
 t = pd.DataFrame({"Metoda": wyn["metoda"],
                   "β1 − β2": [f(x, 3) for x in wyn["beta1 - beta2"]],
                   "Błąd": [f(x, 3) for x in wyn["błąd"]],
                   "OR A wobec B": [f(x) for x in wyn["OR A wobec B"]],
-                  "95% CI dla OR": [f"{f(a)}–{f(b)}" for a, b in
+                  "95% PU dla OR": [f"{f(a)}–{f(b)}" for a, b in
                                     zip(wyn["OR dolna 95%"], wyn["OR górna 95%"])],
                   "p": [fp(x) for x in wyn["p"]],
                   "FMI": ["–" if pd.isna(x) else f(x) for x in wyn["FMI"]]})
-tabela(t, "Iloraz szans zakupu: kanał A wobec kanału B")
+tabela(t, "Iloraz szans zakupu: kanał A wobec kanału B.")
 akapit("Obie metody dają ten sam wniosek: szansa zakupu w kanale A jest około 1,2 raza "
        "większa niż w kanale B, ale różnica nie jest istotna statystycznie. Imputacja tylko "
        "nieznacznie zmienia ocenę i błąd.")
@@ -207,6 +167,4 @@ akapit("Wyniki są do siebie zbliżone, bo braki Y prawie nie zależą od cech k
        "odniesienia. Oba wyniki zakładają, że brak Y nie zależy od samego zakupu – tego dane "
        "nie pozwalają sprawdzić.")
 
-plik = RAPORT / "03_raport_czesc3.docx"
-doc.save(plik)
-print("Zapisano:", plik)
+R.zapisz("03_raport_czesc3.docx")

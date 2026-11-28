@@ -1,0 +1,6 @@
+,statystyka,średnia uzupełnione,średnia replikowane,PPC p
+model z punktu 2 (M = 500),beta1 - beta2 (A wobec B),0.1764,0.1791,0.48
+model z punktu 2 (M = 500),"odsetek Y=1, kanał A",0.1504,0.1508,0.54
+model z punktu 2 (M = 500),"odsetek Y=1, kanał B",0.1308,0.1317,0.492
+model z punktu 2 (M = 500),"odsetek Y=1, kanał 0",0.045,0.0452,0.482
+"model celowo błędny, bez CONTACT (M = 100)",beta1 - beta2 (A wobec B),0.1516,0.0457,0.14
