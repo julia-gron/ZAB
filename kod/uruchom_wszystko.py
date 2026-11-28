@@ -23,14 +23,8 @@ SKRYPTY = [
     ("04_diagnostyka.py", "Punkt 5: diagnostyka imputacji i analiza wrażliwości"),
     ("04_recenzja_osoby1.py", "Kontrola krzyżowa tabel części 1"),
     ("05_podsumowanie.py", "Punkt 4: podsumowanie wyników"),
-    ("02_raport_sekcja2.py", "Raport: część 2"),
-    ("03_raport_sekcja3.py", "Raport: część 3"),
-    ("05_raport_sekcja4.py", "Raport: część 4"),
-    ("04_raport_sekcja5.py", "Raport: część 5"),
-    ("06_raport_koncowy.py", "Raport końcowy (DOCX i PDF)"),
 ]
-PAKIETY = ["numpy", "pandas", "scipy", "statsmodels", "patsy", "scikit-learn", "matplotlib",
-           "python-docx", "docxcompose"]
+PAKIETY = ["numpy", "pandas", "scipy", "statsmodels", "patsy", "scikit-learn", "matplotlib"]
 
 
 def wersja(p):
